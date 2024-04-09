@@ -24,6 +24,8 @@ from scipy.integrate import ode
 __version__ = '0.3'
 __author__ = 'Dawid Laszuk'
 
+a = 3
+
 class Kuramoto(object):
     """
     Implementation of Kuramoto coupling model [1] with harmonic terms
