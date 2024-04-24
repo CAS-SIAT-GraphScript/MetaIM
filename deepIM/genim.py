@@ -17,8 +17,8 @@ import scipy.sparse as sp
 import matplotlib.pyplot as plt
 
 from main.utils import load_dataset, InverseProblemDataset, adj_process, diffusion_evaluation
-from main.model.gat import GAT, SpGAT
-from main.model.model import GNNModel, VAEModel, DiffusionPropagate, Encoder, Decoder
+from model.gat import GAT, SpGAT
+from model.model import GNNModel, VAEModel, DiffusionPropagate, Encoder, Decoder
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 import matplotlib.pyplot as plt
 
@@ -61,9 +61,9 @@ def sampling(inverse_pairs):
         diffusion_count.append(pair[:, 1].sum())
     diffusion_count = torch.Tensor(diffusion_count)
     top_k = diffusion_count.topk(int(0.1*inverse_pairs.shape[0])).indices
-    return top_k
+    return top_k    
 
-with open('data/' + args.dataset + '_mean_' + args.diffusion_model + str(10*args.seed_rate) + '.SG', 'rb') as f:
+with open('data_deepIM/' + args.dataset + '_mean_' + args.diffusion_model + str(10*args.seed_rate) + '.SG', 'rb') as f:
     print('xxx'+str(10*args.seed_rate))
     graph = pickle.load(f)
 
@@ -118,7 +118,7 @@ forward_model.train()
 def loss_all(x, x_hat, y, y_hat):
     reproduction_loss = F.binary_cross_entropy(x_hat, x, reduction='sum')
     forward_loss = F.mse_loss(y_hat, y, reduction='sum')
-    print(f'foward_loss====={forward_loss}')
+    print(f'reproduction_loss====={reproduction_loss}')
     # forward_loss = F.binary_cross_entropy(y_hat, y, reduction='sum')
     return reproduction_loss+forward_loss, reproduction_loss, forward_loss
 
@@ -160,7 +160,6 @@ for epoch in range(600):
             
             precision_re += precision_score(x_true[i], x_pred[0], zero_division=0)
             recall_re += recall_score(x_true[i], x_pred[0], zero_division=0)
-        
         
         total_overall += loss.item()
         loss = loss/x.size(0)
@@ -230,7 +229,7 @@ for i in range(300):
 
     print('Iteration: {}'.format(i+1),
           '\t Total Loss:{:.5f}'.format(loss.item())
-         )
+        )
 
 top_k = x_hat.topk(seed_num)
 seed = top_k.indices[0].cpu().detach().numpy()

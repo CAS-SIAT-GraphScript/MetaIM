@@ -78,6 +78,7 @@ class Encoder(nn.Module):
         h_ = F.relu(self.FC_input2(h_))
         h_ = F.relu(self.FC_input2(h_))
         output = self.FC_output(h_)
+        # output = F.sigmoid(output)
         return output
 
 
@@ -211,7 +212,6 @@ class VAEModel(nn.Module):
             z = self.Encoder(x)
         # z = mean + log_var # takes exponential function (log var -> var)
         x_hat = self.Decoder(z)
-        
         return x_hat
 
 
