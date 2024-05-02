@@ -78,7 +78,6 @@ class Encoder(nn.Module):
         h_ = F.relu(self.FC_input2(h_))
         h_ = F.relu(self.FC_input2(h_))
         output = self.FC_output(h_)
-        # output = F.sigmoid(output)
         return output
 
 
